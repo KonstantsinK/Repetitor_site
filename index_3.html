@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Репетитор по математике | Подготовка к экзаменам</title>
+    <style>
+        /* Сброс стилей и переменные */
+        :root {
+            --primary-color: #1a237e; /* Глубокий синий */
+            --accent-color: #fdd835;  /* Желтый (цвет мела) */
+            --text-dark: #212121;
+            --text-light: #f5f5f5;
+            --border-radius: 12px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--text-light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Математический фон */
+        .math-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .math-symbol {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            user-select: none;
+            transition: transform 0.5s ease;
+        }
+        .math-symbol:hover {
+            transform: scale(1.2) rotate(10deg);
+            opacity: 0.2;
+        }
+
+        /* Навигация */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background-color: var(--primary-color);
+            padding: 1rem 5%;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-speed);
+        }
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-light);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Главный раздел (Hero) */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #283593 100%);
+            color: var(--text-light);
+            text-align: center;
+            padding: 100px 5% 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: slideInDown 1s ease-out;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            animation: slideInUp 1s ease-out 0.2s both;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            padding: 15px 30px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            animation: slideInUp 1s ease-out 0.4s both;
+        }
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(253, 216, 53, 0.4);
+        }
+
+        /* Секции */
+        .section {
+            padding: 80px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            color: var(--primary-color);
+        }
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            border: 2px solid transparent;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-color: var(--accent-color);
+        }
+        .service-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .service-card ul {
+            text-align: left;
+            list-style-position: inside;
+            color: #555;
+        }
+
+        /* Раздел онлайн-занятий */
+        .online-sessions {
+            background-color: #f0f4ff;
+        }
+        .session-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .feature-item span {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        /* Анимация появления секций */
+        .section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            .nav-links {
+                position: fixed;
+            left: -100%;
+            top: 70px;
+            flex-direction: column;
+            background-color: var(--primary-color);
+            width: 100%;
+            text-align: center;
+            transition: 0.3s;
+            box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+            }
+            .nav-links.active {
+                left: 0;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .services-grid, .session-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes slideInDown {
+            0% { opacity: 0; transform: translateY(-30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Математический фон -->
+    <div class="math-bg" id="math-bg"></div>
+
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">MathPro</div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#services">Услуги</a></li>
+                <li><a href="#grade8-9">8-9 классы</a></li>
+                <li><a href="#grade10-11">10-11 классы (ЦТ/ЦЭ)</a></li>
+                <li><a href="#online">Онлайн</a></li>
+            </ul>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Главный раздел -->
+    <section class="hero">
+        <h1>Ваш результат на экзамене — моя работа</h1>
+        <p>Индивидуальный подход, авторские методики и 10 лет опыта подготовки к поступлению в лучшие ВУЗы страны.</p>
+        <a href="#services" class="cta-button">Выбрать программу</a>
+    </section>
+
+    <!-- Главный раздел с описанием услуг -->
+    <section id="services" class="section">
+        <h2>Программы подготовки</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Подготовка к экзаменам в школе (9 класс)</h3>
+                <ul>
+                    <li>Углубленное изучение алгебры и геометрии.</li>
+                    <li>Разбор типовых заданий ОГЭ.</li>
+                    <li>Работа над скоростью решения.</li>
+                    <li>Психологическая подготовка к первому серьезному испытанию.</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <h3>Подготовка к поступлению в ВУЗ</h3>
+                <ul>
+                    <li>Решение задач повышенной сложности (Часть С / Уровень 2).</li>
+                    <li>Подготовка к дополнительным вступительным испытаниям (ДВИ).</li>
+                    <li>Написание олимпиадных работ для получения льгот.</li>
+                    <li>Интенсивный курс перед подачей документов.</li>
+                </ul>
+            </div>
+            <div class="service-card">
+                <h3>Подготовка к сдаче ЦТ и ЦЭ</h3>
+                <ul>
+                    <li>Полный охват кодификатора экзамена.</li>
+                    <li>Еженедельные пробники с детальным разбором ошибок.</li>
+                    <li>Акцент на заданиях второй части.</li>
+                    <li>Авторские шпаргалки с формулами и теоремами.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел для 8-9 классов -->
+    <section id="grade8-9" class="section">
+        <h2>Подготовка к экзамену (8–9 классы)</h2>
+        <p style="text-align: center; max-width: 800px; margin: 0 auto 2rem; color: #555;">Переход в старшую школу — фундамент будущего успеха. Мы не просто готовим к ОГЭ, мы закладываем базу для успешной сдачи ЦТ, ЦЭ и ЕГЭ в будущем. Программа курса адаптируется под текущий уровень знаний ученика.</p>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Устранение пробелов</h3>
+                <p>Быстрое закрытие тем, упущенных в 7-8 классах. Уверенное владение дробями, степенями и основами тригонометрии.</p>
+            </div>
+            <div class="service-card">
+                <h3>Геометрия с нуля</h3>
+                <p>Учим не заучивать теоремы, а строить логические цепочки доказательств. Разбор задач на доказательство и вычисление.</p>
+            </div>
+            <div class="service-card">
+                <h3>Первая часть ОГЭ</h3>
+                <p>Оттачивание навыков решения тестовой части до автоматизма. Секреты оформления, за которые не снижают баллы.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел для 10-11 классов (ЦТ/ЦЭ) -->
+    <section id="grade10-11" class="section">
+        <h2>Подготовка к сдаче ЦТ и ЦЭ (10–11 классы)</h2>
+        <p style="text-align: center; max-width: 800px; margin: 0 auto 2rem; color: #555;">Интенсивная программа для тех, кто нацелен на 90+ баллов. Мы работаем с форматом экзамена, тайм-менеджментом и самыми сложными заданиями второй части.</p>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Планиметрия и Стереометрия</h3>
+                <p>Координатный и векторный методы. Решение сложных задач на построение сечений и поиск углов.</p>
+            </div>
+            <div class="service-card">
+                <h3>Экономические задачи (15 задание)</h3>
+                <p>Кредиты, вклады и оптимизация. Учим решать задачи на движение и работу через таблицы и математическую модель.</p>
+            </div>
+            <div class="service-card">
+                <h3>Параметры и Нестандарт</h3>
+                <p>Графический метод, метод симметрии и оценки. Разбор самых дорогих и сложных заданий экзамена.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел онлайн-занятий -->
+    <section id="online" class="section online-sessions">
+        <h2>Формат онлайн-занятий</h2>
+        <p style="text-align: center; max-width: 800px; margin: 0 auto 2rem; color: #555;">Дистанционный формат не уступает по эффективности очному. Мы используем профессиональные инструменты для максимальной вовлеченности.</p>
+        <div class="session-features">
+            <div class="feature-item">
+                <span>💻</span>
+                <div>
+                    <strong>Интерактивная доска</strong>
+                    <p>Пишем формулы и строим графики в реальном времени, как на настоящей доске.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <span>⏸️</span>
+                <div>
+                    <strong>Запись уроков</strong>
+                    <p>Каждое занятие записывается. Вы можете пересмотреть сложную тему в любое время.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <span>📄</span>
+                <div>
+                    <strong>Электронные материалы</strong>
+                    <p>Все конспекты, домашние задания и справочники хранятся в личном кабинете.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Плавная прокрутка и sticky меню уже реализованы через CSS (scroll-behavior и position: sticky)
+
+        // Мобильное меню
+        const menuToggle = document.getElementById('menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            // Анимация иконки бургера
+            menuToggle.classList.toggle('active');
+        });
+
+        // Закрытие меню при клике на ссылку
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Анимация появления секций при прокрутке
+        const sections = document.querySelectorAll('.section');
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Генерация математического фона
+        const mathBg = document.getElementById('math-bg');
+        const symbols = ['\u03A3', '\u03C0', '\u221E', 'x', 'y', 'z', '\u221A', 'f(x)'];
+        for (let i = 0; i < 30; i++) {
+            const span = document.createElement('span');
+            span.classList.add('math-symbol');
+            span.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            span.style.left = Math.random() * 100 + 'vw';
+            span.style.top = Math.random() * 100 + 'vh';
+            span.style.animationDelay = Math.random() * 5 + 's';
+            span.style.animationDuration = Math.random() * 20 + 15 + 's';
+            span.style.animationName = 'float';
+            mathBg.appendChild(span);
+        }
+
+        // Добавим анимацию движения для символов
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0%, 100% { transform: translateY(0) rotate(0deg); }
+                50% { transform: translateY(-20px) rotate(180deg); }
+            }
+            .math-symbol {
+                animation-timing-function: linear;
+                animation-iteration-count: infinite;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Анимация иконки бургера
+        const toggleSpans = menuToggle.querySelectorAll('span');
+        menuToggle.addEventListener('click', () => {
+            toggleSpans.forEach((span, index) => {
+                if (index === 0) {
+                    span.style.transform = menuToggle.classList.contains('active') ? 'rotate(45deg) translate(5px, 5px)' : '';
+                }
+                if (index === 1) {
+                    span.style.opacity = menuToggle.classList.contains('active') ? '0' : '1';
+                }
+                if (index === 2) {
+                    span.style.transform = menuToggle.classList.contains('active') ? 'rotate(-45deg) translate(7px, -6px)' : '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
